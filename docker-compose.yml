@@ -1,0 +1,42 @@
+services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    read_only: true
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=64m"]
+    pids_limit: 128
+    mem_limit: 512m
+    cpus: 1.0
+    networks: [app]
+  verifier:
+    image: gcc:14-bookworm
+    profiles: [verification]
+    network_mode: none
+    user: "1000:1000"
+    read_only: true
+    cap_drop: ["ALL"]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=128m"]
+    pids_limit: 64
+    mem_limit: 512m
+    cpus: 1.0
+    networks: []
+  postgres:
+    image: postgres:16-alpine
+    profiles: [production]
+    environment:
+      POSTGRES_DB: securepatch
+      POSTGRES_USER: securepatch
+      POSTGRES_PASSWORD: change-me
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+    networks: [app]
+  redis:
+    image: redis:7-alpine
+    profiles: [production]
+    networks: [app]
+networks:
+  app:
+volumes:
+  postgres_data:

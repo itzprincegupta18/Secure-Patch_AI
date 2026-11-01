@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "securepatch-ai"
+version = "4.0.0"
+description = "Evidence-first vulnerability detection for existing C/C++ IoT firmware"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "pydantic>=2.7,<3",
+  "tree-sitter>=0.22,<0.26",
+  "tree-sitter-c>=0.21,<0.24",
+  "tree-sitter-cpp>=0.22,<0.24",
+]
+
+[project.optional-dependencies]
+api = ["fastapi>=0.115,<1", "uvicorn>=0.30,<1", "python-multipart>=0.0.9,<1"]
+ui = ["streamlit>=1.40,<2"]
+dev = [
+  "pytest>=8,<9",
+  "ruff>=0.8,<1",
+  "mypy>=1.13,<2",
+]
+
+
+[tool.setuptools]
+packages = ["app", "app.api", "app.core", "app.security", "app.ai", "app.verification", "detector", "detector.rules", "models"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
